@@ -1,0 +1,156 @@
+@page "/"
+
+@using System.Threading
+
+@implements IDisposable
+
+<div class="world">
+    @switch (State)
+    {
+        case GameState.Initial:
+            <div class="card">
+                Ready, set and ....
+                <button class="btn btn-primary" @onclick="StartNewGame">play!</button>
+            </div>
+            break;
+        case GameState.Starting:
+        case GameState.Started:
+                <div class="level" @onclick="RecordMiss">
+                    @if (State is GameState.Starting)
+                    {
+                        <div class="card">
+                            <h3>Starting in: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Time left: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</p>
+
+                        <img 
+                            class="target" 
+                            src="target.png" 
+                            @onclick="RecordHit" 
+                            style="left: @(CurrentOffsetLeft.ToString("P0")); top: @(CurrentOffsetTop.ToString("P0"))" 
+                            @onclick:stopPropagation="true"
+                        />
+                    }
+                </div>
+            break;
+        case GameState.Finished:
+            <div class="card">
+                @if (State == GameState.Finished)
+                {
+                    <h2>Congrats!</h2>
+                }
+
+                <p>Hits: @Hits</p>
+                <p>Misses: @Misses</p>
+                @if (Hits + Misses > 0)
+                {
+                    <p>Accuracy: @((Hits / (double)(Hits + Misses)).ToString("P0"))</p>
+                }
+                
+                <p>
+                    <button class="btn btn-primary" @onclick="StartNewGame">play again!</button>
+                </p>
+            </div>
+            break;
+    }
+
+
+
+</div>
+
+
+
+@code {
+    public TimeSpan WarmupTime { get; set; } = TimeSpan.FromSeconds(3);
+    public TimeSpan GameTime { get; set; } = TimeSpan.FromSeconds(10);
+
+    public enum GameState
+    {
+        Initial,
+        Starting,
+        Started,
+        Finished
+    }
+
+    Timer timer;
+    Random random = new Random();
+    
+    public GameState State { get; private set; }
+    public DateTime? NextStateDateTime { get; private set; }
+
+    public double CurrentOffsetTop { get; private set; }
+    public double CurrentOffsetLeft { get; private set; }
+
+    public int Hits { get; private set; }
+    public int Misses { get; private set; }
+
+    public void StartNewGame()
+    {
+        Hits = 0;
+        UpdateTarget();
+
+        State = GameState.Starting;
+        NextStateDateTime = DateTime.UtcNow.Add(WarmupTime);
+    }
+
+    public void RecordHit()
+    {
+        if (State is GameState.Started)
+        {
+            Hits += 1;
+            UpdateTarget();
+        }
+    }
+
+    public void RecordMiss()
+    {
+        if (State is GameState.Started)
+        {
+            Misses += 1;
+            UpdateTarget();
+        }
+    }
+
+    public void UpdateTarget()
+    {
+        CurrentOffsetTop = random.NextDouble();    
+        CurrentOffsetLeft = random.NextDouble();    
+    }
+
+    protected override void OnInitialized()
+    {
+        timer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(ProgressGameTick);
+        }, null, 100, 100);
+    }
+
+    public void ProgressGameTick()
+    {
+        if (NextStateDateTime is not null && NextStateDateTime <= DateTime.UtcNow)
+        {
+            NextStateDateTime = null;
+
+            switch (State)
+            {
+                case GameState.Starting:
+                    State = GameState.Started;
+                    NextStateDateTime = DateTime.UtcNow.Add(GameTime);
+                    break;
+                case GameState.Started:
+                    State = GameState.Finished;
+                    break;
+            };
+        }
+
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}
