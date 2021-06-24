@@ -68,6 +68,30 @@ namespace ClickTournament.Tests.Pages
                 Assert.Equal(1, app.Instance.Hits);
                 Assert.Equal(1, app.Instance.Misses);
             });
+            
+            var samples = new[] { 0, 1, 10, 50, 100 };
+            foreach (var hitSample in samples)
+            {
+                scenario.Theory("We can hit numerous times", new { expectedHits = hitSample }, () => {
+                    for (var i = 0; i < hitSample; i++)
+                    {
+                        app.Instance.RecordHit();
+                    }
+
+                    Assert.Equal(hitSample, app.Instance.Hits);
+                });
+            }
+            foreach (var missSample in samples)
+            {
+                scenario.Theory("We can miss numerous times", new { expectedHits = missSample }, () => {
+                    for (var i = 0; i < missSample; i++)
+                    {
+                        app.Instance.RecordMiss();
+                    }
+
+                    Assert.Equal(missSample, app.Instance.Misses);
+                });
+            }
 
             await Task.Delay(2200);
 

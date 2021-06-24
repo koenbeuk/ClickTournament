@@ -151,7 +151,6 @@ namespace ClickTournament.Tests.Pages
             Assert.Equal(1, app.Instance.Misses);
         }
 
-
         [Fact]
         public async Task ScoresAreGettingIgnoredWhenInFinishedState()
         {
@@ -172,6 +171,60 @@ namespace ClickTournament.Tests.Pages
             // Assert
             Assert.Equal(0, app.Instance.Hits);
             Assert.Equal(0, app.Instance.Misses);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(10)]
+        [InlineData(50)]
+        [InlineData(100)]
+        public async Task WeCanHitNumerousTimes(int hitSample)
+        {
+            // Arrange
+            using var ctx = new TestContext();
+
+            // Act
+            var app = ctx.RenderComponent<App>();
+            app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
+            app.Instance.StartNewGame();
+
+            await Task.Delay(1100);
+
+            for (var i = 0; i < hitSample; i++)
+            {
+                app.Instance.RecordHit();
+            }
+
+            // Assert
+            Assert.Equal(hitSample, app.Instance.Hits);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(10)]
+        [InlineData(50)]
+        [InlineData(100)]
+        public async Task WeCanMissNumerousTimes(int missSample)
+        {
+            // Arrange
+            using var ctx = new TestContext();
+
+            // Act
+            var app = ctx.RenderComponent<App>();
+            app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
+            app.Instance.StartNewGame();
+
+            await Task.Delay(1100);
+
+            for (var i = 0; i < missSample; i++)
+            {
+                app.Instance.RecordHit();
+            }
+
+            // Assert
+            Assert.Equal(missSample, app.Instance.Hits);
         }
     }
 }
