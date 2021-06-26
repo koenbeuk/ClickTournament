@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ClickTournament.Tests.Pages
 {
-    public partial class CounterScenarioTests
+    public partial class ScenarioTests
     {
         [Scenario(NamingPolicy = ScenarioTestMethodNamingPolicy.Test)]
         public async Task PlayScenario(ScenarioContext scenario)
@@ -68,7 +68,8 @@ namespace ClickTournament.Tests.Pages
                 Assert.Equal(1, app.Instance.Hits);
                 Assert.Equal(1, app.Instance.Misses);
             });
-            
+
+            #region Theories
             var samples = new[] { 0, 1, 10, 50, 100 };
             foreach (var hitSample in samples)
             {
@@ -92,6 +93,7 @@ namespace ClickTournament.Tests.Pages
                     Assert.Equal(missSample, app.Instance.Misses);
                 });
             }
+            #endregion
 
             await Task.Delay(2200);
 

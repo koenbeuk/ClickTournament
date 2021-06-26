@@ -15,26 +15,26 @@
             break;
         case GameState.Starting:
         case GameState.Started:
-                <div class="level" @onclick="RecordMiss">
-                    @if (State is GameState.Starting)
-                    {
-                        <div class="card">
-                            <h3>Starting in: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</h3>
-                        </div>
-                    }
-                    else
-                    {
-                        <p>Time left: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</p>
+            <div class="level" @onclick="RecordMiss">
+                @if (State is GameState.Starting)
+                {
+                    <div class="card">
+                        <h3>Starting in: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</h3>
+                    </div>
+                }
+                else
+                {
+                    <p>Time left: @((NextStateDateTime - DateTime.UtcNow)?.TotalSeconds.ToString("N0"))</p>
 
-                        <img 
-                            class="target" 
-                            src="target.png" 
-                            @onclick="RecordHit" 
-                            style="left: @(CurrentOffsetLeft.ToString("P0")); top: @(CurrentOffsetTop.ToString("P0"))" 
-                            @onclick:stopPropagation="true"
-                        />
-                    }
-                </div>
+                    <img 
+                        class="target" 
+                        src="target.png" 
+                        style="left: @(CurrentOffsetLeft.ToString("P0")); top: @(CurrentOffsetTop.ToString("P0"))" 
+                        @onclick="RecordHit" 
+                        @onclick:stopPropagation="true"
+                    />
+                }
+            </div>
             break;
         case GameState.Finished:
             <div class="card">
@@ -53,12 +53,7 @@
             </div>
             break;
     }
-
-
-
 </div>
-
-
 
 @code {
     public TimeSpan WarmupTime { get; set; } = TimeSpan.FromSeconds(3);
@@ -87,6 +82,7 @@
     public void StartNewGame()
     {
         Hits = 0;
+        Misses = 0;
         UpdateTarget();
 
         State = GameState.Starting;
@@ -142,7 +138,7 @@
                     break;
             };
         }
-
+        
         StateHasChanged();
     }
 

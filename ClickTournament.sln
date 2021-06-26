@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickTournament.Tests", "Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickTournament.E2ETests", "ClickTournament.E2ETests\ClickTournament.E2ETests.csproj", "{46FD27C3-051C-4007-9843-849D3D5844F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickTournament.ManualTests", "ClickTournament.ManualTests\ClickTournament.ManualTests.csproj", "{D39A9429-A1EB-4FAB-B66A-9D32EB3F9E95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{46FD27C3-051C-4007-9843-849D3D5844F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46FD27C3-051C-4007-9843-849D3D5844F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46FD27C3-051C-4007-9843-849D3D5844F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D39A9429-A1EB-4FAB-B66A-9D32EB3F9E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39A9429-A1EB-4FAB-B66A-9D32EB3F9E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39A9429-A1EB-4FAB-B66A-9D32EB3F9E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39A9429-A1EB-4FAB-B66A-9D32EB3F9E95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

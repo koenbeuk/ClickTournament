@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ClickTournament.Tests.Pages
 {
-    public class AppTests
+    public class NonScenarioTests
     {
         [Fact]
         public void StartsInAnInitialState()
