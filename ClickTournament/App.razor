@@ -58,6 +58,7 @@
 @code {
     public TimeSpan WarmupTime { get; set; } = TimeSpan.FromSeconds(3);
     public TimeSpan GameTime { get; set; } = TimeSpan.FromSeconds(10);
+    public TimeSpan ProgressInterval { get; set; } = TimeSpan.FromMilliseconds(100);
 
     public enum GameState
     {
@@ -118,7 +119,7 @@
         timer = new System.Threading.Timer(_ =>
         {
             InvokeAsync(ProgressGameTick);
-        }, null, 100, 100);
+        }, null, ProgressInterval, ProgressInterval);
     }
 
     public void ProgressGameTick()

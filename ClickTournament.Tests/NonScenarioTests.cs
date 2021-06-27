@@ -11,7 +11,7 @@ namespace ClickTournament.Tests.Pages
     public class NonScenarioTests
     {
         [Fact]
-        public void StartsInAnInitialState()
+        public void StartInAnInitialState()
         {
             // Arrange
             using var ctx = new TestContext();
@@ -27,7 +27,7 @@ namespace ClickTournament.Tests.Pages
         }
 
         [Fact]
-        public void StartNewGame_MovesStateToStarting()
+        public void StartNewGame_MovedToStartingState()
         {
             // Arrange
             using var ctx = new TestContext();
@@ -42,7 +42,7 @@ namespace ClickTournament.Tests.Pages
         }
 
         [Fact]
-        public async Task StartNewGame_AfterStartingPeriod_MovesStateToStarted()
+        public async Task StartNewGame_AfterStartingPeriod_MovedToStartedState()
         {
             // Arrange
             using var ctx = new TestContext();
@@ -52,7 +52,7 @@ namespace ClickTournament.Tests.Pages
             app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(1100);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
 
             // Assert
             Assert.Equal(App.GameState.Started, app.Instance.State);
@@ -60,7 +60,7 @@ namespace ClickTournament.Tests.Pages
         }
 
         [Fact]
-        public async Task StartNewGame_AfterGameEnded_MovesStateToFinished()
+        public async Task StartNewGame_AfterGameEnded_MovedToFinishedState()
         {
             // Arrange
             using var ctx = new TestContext();
@@ -71,7 +71,8 @@ namespace ClickTournament.Tests.Pages
             app.Instance.GameTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(2200);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
+            await Task.Delay(app.Instance.GameTime + app.Instance.ProgressInterval);
 
             // Assert
             Assert.Equal(App.GameState.Finished, app.Instance.State);
@@ -79,7 +80,7 @@ namespace ClickTournament.Tests.Pages
         }
 
         [Fact]
-        public async Task StartSecondGame_MovesStateToStarting()
+        public async Task StartSecondGame_MovedToStartingState()
         {
             // Arrange
             using var ctx = new TestContext();
@@ -90,7 +91,8 @@ namespace ClickTournament.Tests.Pages
             app.Instance.GameTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(3000);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
+            await Task.Delay(app.Instance.GameTime + app.Instance.ProgressInterval);
 
             app.Instance.StartNewGame();
 
@@ -142,7 +144,8 @@ namespace ClickTournament.Tests.Pages
             app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(1100);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
+
             app.Instance.RecordHit();
             app.Instance.RecordMiss();
 
@@ -163,7 +166,8 @@ namespace ClickTournament.Tests.Pages
             app.Instance.GameTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(2200);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
+            await Task.Delay(app.Instance.GameTime + app.Instance.ProgressInterval);
 
             app.Instance.RecordHit();
             app.Instance.RecordMiss();
@@ -189,7 +193,7 @@ namespace ClickTournament.Tests.Pages
             app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(1100);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
 
             for (var i = 0; i < hitSample; i++)
             {
@@ -216,7 +220,7 @@ namespace ClickTournament.Tests.Pages
             app.Instance.WarmupTime = TimeSpan.FromSeconds(1);
             app.Instance.StartNewGame();
 
-            await Task.Delay(1100);
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
 
             for (var i = 0; i < missSample; i++)
             {

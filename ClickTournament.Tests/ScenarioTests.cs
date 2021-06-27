@@ -27,7 +27,7 @@ namespace ClickTournament.Tests.Pages
                 Assert.Equal(0, app.Instance.Hits);
                 Assert.Equal(0, app.Instance.Misses);
             });
-            scenario.Fact("Scores are getting ignored when in started state", () =>
+            scenario.Fact("Scores are getting ignored when in initial state", () =>
             {
                 app.Instance.RecordHit();
                 app.Instance.RecordMiss();
@@ -37,6 +37,7 @@ namespace ClickTournament.Tests.Pages
                 Assert.Equal(0, app.Instance.Misses);
             });
 
+            // Start our first game
             app.Instance.StartNewGame();
             
             scenario.Fact("Moved to a starting state", () =>
@@ -53,7 +54,8 @@ namespace ClickTournament.Tests.Pages
                 Assert.Equal(0, app.Instance.Misses);
             });
 
-            await Task.Delay(1100);
+            // Wait for the Starting state to transition
+            await Task.Delay(app.Instance.WarmupTime + app.Instance.ProgressInterval);
 
             scenario.Fact("Moved to a started state", () =>
             {
@@ -95,7 +97,8 @@ namespace ClickTournament.Tests.Pages
             }
             #endregion
 
-            await Task.Delay(2200);
+            // Wait for the Started stte to transition
+            await Task.Delay(app.Instance.GameTime + app.Instance.ProgressInterval);
 
             scenario.Fact("Moved to a finished state", () =>
             {
