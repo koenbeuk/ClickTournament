@@ -4,6 +4,7 @@ using Microsoft.Playwright;
 using ScenarioTests;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -22,8 +23,17 @@ namespace ClickTournament.E2ETests
 
             // Launch a new page navigating to Localhost (assuming project is running)
             var page = await browser.NewPageAsync();
-            await page.GotoAsync("https://localhost:5001");
-            
+
+            try
+            {
+                await page.GotoAsync("https://localhost:5001");
+            }
+            catch (PlaywrightException ex)
+                when (ex.Message.Contains("net::ERR_CONNECTION_REFUSED", StringComparison.Ordinal))
+            {
+                scenario.Skip("Requires the webserver to be running on localhost at post 5001");
+            }
+
             // Test if we were able to load in the title correctly
             await scenario.Fact("Page has a correct title", async () =>
             {
